@@ -29,17 +29,20 @@ app.post('/api/addMovie', function(req, res) {
   else if(typeof(req.body.title) !== 'string'){
     res.status(400).json({"code": 400, "msg": "'title' field must be of type String"});
   }
-  // ensure 'releaseYear' is of type String convertible to Date
+  // ensure 'releaseYear' is of type String convertible to Date 
+  //   IF 'releaseYear' is present
   //   ensure by converting string representation of date and checking if it is invalid
-  else if((new Date(req.body.releaseYear)).toString() === 'Invalid Date'){
+  else if(req.body.releaseYear && (new Date(req.body.releaseYear)).toString() === 'Invalid Date'){
     res.status(400).json({"code": 400, "msg": "'releaseYear' field must be of type String convertible to date"});
   }
   // ensure 'rating' is an Integer
-  else if(!Number.isInteger(req.body.rating)){
+  //   IF 'rating' is present
+  else if(req.body.rating && !Number.isInteger(req.body.rating)){
     res.status(400).json({"code": 400, "msg": "'rating' field must be an Integer"});
   }
   // ensure 1 <= 'rating' <= 10 
-  else if(req.body.rating < 1 || req.body.rating > 10){
+  //   IF 'rating' is present
+  else if(req.body.rating && (req.body.rating < 1 || req.body.rating > 10)){
     res.status(400).json({"code": 400, "msg": "'rating' field must lie in [1, 10]"});
   }
   else{
