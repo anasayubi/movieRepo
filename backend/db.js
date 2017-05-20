@@ -4,9 +4,7 @@ module.exports = function(){
   mongoose.connect('mongodb://localhost/movieRepo');
 
   var db = mongoose.connection;
-  db.on('error', function() {
-    console.error.bind(console, 'MongoDB connection error: ');
-  });
+  db.on('error', console.error.bind(console,'Error in Connection :: Cannot Connect to movieRepo'));
   db.once('open', function() {
     console.log('MongoDB successfully connected');
   });
@@ -16,7 +14,7 @@ module.exports = function(){
     releaseYear: {type: Date},
     rating: {type: Number, min: 1, max: 10} 
   });
-  var Movies = mongoose.model('Movie', movieSchema);
-  return Movies;
+  var Movie = mongoose.model('Movie', movieSchema);
+  return Movie;
 }
 
