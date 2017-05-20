@@ -8,11 +8,12 @@ var app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json({limit : '80mb'}));
 // app.use(bodyParser.urlencoded({extended: true}))
+// returns Movie model
 var Movie = require('./db.js')()
 
 // Add movie POST path
 app.post('/api/addMovie', function(req, res) {
-  // Accepts form input as such:
+  // Accepts JSON input as such:
   //   {title: [String], releaseYear: [String], rating: [Number]}
   // 'title' is required
   // both 'releaseYear' & 'rating' are not required
@@ -64,6 +65,33 @@ app.post('/api/addMovie', function(req, res) {
         res.status(400).json({"code": 400, "msg": "movie unable to be save"});
       }
     });
+  }
+});
+
+app.post('/api/removeMovie', function(req, res) {
+  // Accepts JSON input as such:
+  //   {id: [ObjectID]}
+  // 'id' field must be a valid ID in the MongoDB
+
+  // Validation
+  // ensure 'id' is present
+  if(!req.body.id){
+    res.status(400).json({"code": 400, "msg": "'id' field must be present"});
+  }
+  else{
+    Movie.findByIdAndRemove(req.body.id, function(err, writeResult){
+      console.log('err: ', err);
+      console.log('writeResult: ', writeResult);
+      if(!err && writeResult){
+        res.status(200).json({"code": 200, "msg": "movie with id " + req.body.id + " has been removed"});
+      }
+      else if(!err && !writeResult){
+        res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " does not exist in DB"});
+      }
+      else{
+        res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " could not be removed"});
+      }
+    })
   }
 });
   
