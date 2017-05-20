@@ -11,5 +11,11 @@
     "url": "https://github.com/anasayubi/movieRepo/tree/master"
   },
   "author": "anasayubi",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.0",
+    "morgan": "^1.8.1"
+  }
 }
