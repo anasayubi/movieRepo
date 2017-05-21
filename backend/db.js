@@ -12,7 +12,8 @@ module.exports = function(){
   var movieSchema = mongoose.Schema({
     title: {type: String, required: true},
     releaseYear: {type: Date},
-    rating: {type: Number, min: 1, max: 10} 
+    rating: {type: Number, min: 1, max: 10},
+    creationDateTime: {type: Date, default: new Date()}
   });
   var Movie = mongoose.model('Movie', movieSchema);
   return Movie;

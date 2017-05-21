@@ -23,6 +23,9 @@ app.post('/api/addMovie', function(req, res) {
   //   stored as an object in MongoDB
   // 'rating' is a number that spans from 1 to 10 and must be an integer
 
+  // request
+  (DEBUG) ? console.log('request: ', req.body) : "";
+
   // Validation:
   // ensure 'title' is present
   if(!req.body.title){
@@ -59,9 +62,6 @@ app.post('/api/addMovie', function(req, res) {
       releaseYear: req.body.releaseYear, 
       rating: req.body.rating
     }
-    
-    // request
-    (DEBUG) ? console.log('request: ', req.body) : "";
 
     var movie = new Movie(movieInfo);
     movie.save(function(err, doc){
@@ -82,6 +82,9 @@ app.post('/api/removeMovie', function(req, res) {
   //   {id: [ObjectID]}
   // 'id' field must be a valid ID in the MongoDB
 
+  // request
+  (DEBUG) ? console.log('request: ', req.body) : "";
+
   // Validation
   // ensure 'id' is present
   if(!req.body.id){
@@ -92,9 +95,6 @@ app.post('/api/removeMovie', function(req, res) {
     res.status(400).json({"code": 400, "msg": "'id' field must be of type String"});
   }
   else{
-    // request
-    (DEBUG) ? console.log('request: ', req.body) : "";
-
     Movie.findByIdAndRemove(req.body.id, function(err, writeResult){
       (DEBUG) ? console.log('err on remove: ', err) : "";
       (DEBUG) ? console.log('writeResult on remove: ', writeResult) : "";
@@ -124,6 +124,9 @@ app.post('/api/editMovie', function(req, res){
 
   // Use 'movieUpdateInfo' to store all update info
   var movieUpdateInfo = {};
+
+  // request
+  (DEBUG) ? console.log('request: ', req.body) : "";
 
   if(req.body.id){
     // ensure that 'id' is of type String
@@ -188,9 +191,6 @@ app.post('/api/editMovie', function(req, res){
     // store 'rating' in case all above validation checks are passed
     movieUpdateInfo.rating = req.body.rating;
   }
-  
-  // request
-  (DEBUG) ? console.log('request: ', req.body) : "";
 
   // Process saving if all validation checks passed
   (DEBUG) ? console.log('movieUpdateInfo: ', movieUpdateInfo) : "";
@@ -207,7 +207,68 @@ app.post('/api/editMovie', function(req, res){
     }
   });
 });
+
+app.post('/api/showMovies', function(req, res){
+  // Accepts JSON input as such:
+  //   {pageNo: [Integer]}
+  // 'pageNo' field must be an integer and must be within the number of page numbers available
+  // the page numbers available depend on the number of movies within the DB & are calculated according to this formula:
+  //   (no. of movies) / 5
+  // 'pageNo' field must be > 0
+  // if 'pageNo' field integer exceeds greatest value of possible page number then default to the greatest value
+  // returns 5 movies of a page
   
+  // request
+  (DEBUG) ? console.log('request: ', req.body) : "";
+
+  // Validation:
+  // ensure 'pageNo' field is present 
+  if(!req.body.pageNo){
+    res.status(400).json({"code": 400, "msg": "'pageNo' field must be present"});
+  }
+  // ensure 'pageNo' field is an integer
+  else if(!Number.isInteger(req.body.pageNo)){
+    res.status(400).json({"code": 400, "msg": "'pageNo' field must be an integer"});
+  }
+  else{
+    Movie.count(function(err, count){
+      (DEBUG) ? console.log('err on counting: ', err) : "";
+      (DEBUG) ? console.log('count on counting: ', count) : "";
+
+      // If no movies in DB then send message accordingly
+      if(count === 0){
+        res.status(500).json({"code": 500, "msg": "No movies are present in the DB"});
+        return;
+      }
+
+      // calculate max page number
+      var maxPageNo = Math.ceil(count / 5);
+      if(req.body.pageNo > maxPageNo){
+        req.body.pageNo = maxPageNo;
+      }
+
+      // If there are movies in 
+      Movie.find().sort({creationDateTime: 1}).batchSize(5).skip(5 * (req.body.pageNo - 1))
+      .exec(function(err, docs){
+        (DEBUG) ? console.log('err on retrieval: ', err) : "";
+        (DEBUG) ? console.log('docs on retrieval: ', docs) : "";
+
+        if(!err && docs){
+          res.status(200).json({
+            "code": 200, 
+            "currentPageNo": req.body.pageNo, 
+            "maxPageNo": maxPageNo,
+            "movies": docs 
+          });
+        }
+        else{
+          res.status(400).json({"code": 400, "msg": "Movies could not be retrieved"});
+        }
+      });
+    });
+  }
+});
+
 app.listen(9000, function(){
   console.log('Backend server started at http://localhost:9000');
 });
