@@ -10,6 +10,8 @@ app.use(bodyParser.json({limit : '80mb'}));
 // app.use(bodyParser.urlencoded({extended: true}))
 // returns Movie model
 var Movie = require('./db.js')()
+// set debugging variable
+var DEBUG = true;
 
 // Add movie POST path
 app.post('/api/addMovie', function(req, res) {
@@ -57,16 +59,19 @@ app.post('/api/addMovie', function(req, res) {
       releaseYear: req.body.releaseYear, 
       rating: req.body.rating
     }
-    console.log('req.body: ', req.body)
+    
+    // request
+    (DEBUG) ? console.log('request: ', req.body) : "";
+
     var movie = new Movie(movieInfo);
     movie.save(function(err, doc){
-      console.log('err: ', err);
-      console.log('doc: ', doc);
+      (DEBUG) ? console.log('err on save: ', err) : "";
+      (DEBUG) ? console.log('movie on save: ', doc) : "";
       if(!err && doc){
-        res.status(200).json({"code": 200, "msg": "movie saved"});
+        res.status(200).json({"code": 200, "msg": "movie " + JSON.stringify(req.body) + " saved"});
       }
       else{
-        res.status(400).json({"code": 400, "msg": "movie unable to be save"});
+        res.status(400).json({"code": 400, "msg": "movie unable to save according to " + JSON.stringify(req.body)});
       }
     });
   }
@@ -87,9 +92,13 @@ app.post('/api/removeMovie', function(req, res) {
     res.status(400).json({"code": 400, "msg": "'id' field must be of type String"});
   }
   else{
+    // request
+    (DEBUG) ? console.log('request: ', req.body) : "";
+
     Movie.findByIdAndRemove(req.body.id, function(err, writeResult){
-      console.log('err: ', err);
-      console.log('writeResult: ', writeResult);
+      (DEBUG) ? console.log('err on remove: ', err) : "";
+      (DEBUG) ? console.log('writeResult on remove: ', writeResult) : "";
+      
       if(!err && writeResult){
         res.status(200).json({"code": 200, "msg": "movie with id " + req.body.id + " has been removed"});
       }
@@ -97,7 +106,8 @@ app.post('/api/removeMovie', function(req, res) {
         res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " does not exist in DB"});
       }
       else{
-        res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " could not be removed"});
+        res.status(400).json({"code": 400, "msg": "movie unable to be removed according to  " 
+          + JSON.stringify(req.body)});
       }
     })
   }
@@ -179,17 +189,21 @@ app.post('/api/editMovie', function(req, res){
     movieUpdateInfo.rating = req.body.rating;
   }
   
+  // request
+  (DEBUG) ? console.log('request: ', req.body) : "";
+
   // Process saving if all validation checks passed
-  console.log('movieUpdateInfo: ', movieUpdateInfo);
+  (DEBUG) ? console.log('movieUpdateInfo: ', movieUpdateInfo) : "";
 
   Movie.findByIdAndUpdate(req.body.id, movieUpdateInfo, function(err, doc){
-    console.log('err: ', err);
-    console.log('doc: ', doc);
+    (DEBUG) ? console.log('err on update: ', err) : "";
+    (DEBUG) ? console.log('movie returned on update: ', doc) : "";
+
     if(!err && doc){
-      res.status(200).json({"code": 200, "msg": "movie edited"});
+      res.status(200).json({"code": 200, "msg": "movie updated according to " + JSON.stringify(movieUpdateInfo)});
     }
     else{
-      res.status(400).json({"code": 400, "msg": "movie unable to be edited"});
+      res.status(400).json({"code": 400, "msg": "movie unable to be edited according to " +  JSON.stringify(movieUpdateInfo)});
     }
   });
 });
