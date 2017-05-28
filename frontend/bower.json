@@ -1,0 +1,21 @@
+{
+  "name": "movieRepo_frontend",
+  "main": "index.js",
+  "homepage": "https://github.com/anasayubi/movieRepo",
+  "authors": [
+    "anasayubi <anasayubi@hotmail.com>"
+  ],
+  "description": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-route": "^1.6.4"
+  }
+}
