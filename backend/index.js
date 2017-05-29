@@ -21,7 +21,7 @@ var DEBUG = true;
 var api = require('./api')(app, DEBUG, Movie);
 
 app.post('/api/addMovie', api.addMovie);
-app.post('/api/removeMovie', api.removeMovie);
+app.delete('/api/movie', api.removeMovie);
 app.post('/api/editMovie', api.editMovie);
 app.post('/api/showMovies', api.showMovies);
 

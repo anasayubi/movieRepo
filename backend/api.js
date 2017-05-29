@@ -67,13 +67,6 @@ module.exports = function(app, DEBUG, Movie){
       newMovieInfo.rating = req.body.rating;
     }
 
-    // Process saving
-    // var movieInfo = {
-    //   title: req.body.title, 
-    //   releaseYear: req.body.releaseYear, 
-    //   rating: req.body.rating
-    // }
-
     var movie = new Movie(newMovieInfo);
     movie.save(function(err, doc){
       (DEBUG) ? console.log('err on save: ', err) : "";
