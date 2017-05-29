@@ -26,5 +26,5 @@ app.post('/api/editMovie', api.editMovie);
 app.post('/api/showMovies', api.showMovies);
 
 app.listen(9000, function(){
-  console.log('Initialising Backend server started at http://localhost:9000');
+  console.log('Initialising backend server started at http://localhost:9000');
 });

@@ -14,55 +14,86 @@ module.exports = function(app, DEBUG, Movie){
     // request
     (DEBUG) ? console.log('request: ', req.body) : "";
 
-    // Validation:
-    // ensure 'title' is present
-    if(!req.body.title){
-      res.status(400).json({"code": 400, "msg": "'title' field must be present"});
-    }
-    // ensure 'title' is of type String
-    else if(typeof(req.body.title) !== 'string'){
-      res.status(400).json({"code": 400, "msg": "'title' field must be of type String"});
-    }
-    // ensure 'releaseYear' is of type String
-    else if(req.body.releaseYear && typeof(req.body.releaseYear) !== 'string'){
-      res.status(400).json({"code": 400, "msg": "'releaseYear' field must be of type String"});
-    }
-    // ensure 'releaseYear' is convertible to Date 
-    //   IF 'releaseYear' is present
-    //   ensure by converting string representation of date and checking if it is invalid
-    else if(req.body.releaseYear && (new Date(req.body.releaseYear)).toString() === 'Invalid Date'){
-      res.status(400).json({"code": 400, "msg": "'releaseYear' field must be convertible to date"});
-    }
-    // ensure 'rating' is an Integer
-    //   IF 'rating' is present
-    else if(req.body.rating && !Number.isInteger(req.body.rating)){
-      res.status(400).json({"code": 400, "msg": "'rating' field must be an Integer"});
-    }
-    // ensure 1 <= 'rating' <= 10 
-    //   IF 'rating' is present
-    else if(req.body.rating && (req.body.rating < 1 || req.body.rating > 10)){
-      res.status(400).json({"code": 400, "msg": "'rating' field must lie in [1, 10]"});
-    }
-    else{
-      // Process saving
-      var movieInfo = {
-        title: req.body.title, 
-        releaseYear: req.body.releaseYear, 
-        rating: req.body.rating
-      }
+    // Use 'newMovieInfo' to store all valid new movie info
+    var newMovieInfo = {};
 
-      var movie = new Movie(movieInfo);
-      movie.save(function(err, doc){
-        (DEBUG) ? console.log('err on save: ', err) : "";
-        (DEBUG) ? console.log('movie on save: ', doc) : "";
-        if(!err && doc){
-          res.status(200).json({"code": 200, "msg": "movie " + JSON.stringify(req.body) + " saved"});
-        }
-        else{
-          res.status(400).json({"code": 400, "msg": "movie unable to save according to " + JSON.stringify(req.body)});
-        }
-      });
+    // validation when 'title' is present
+    if(req.body.title){
+      // ensure 'title' is of type String
+      if(typeof(req.body.title) !== 'string'){
+        res.status(400).json({"code": 400, "msg": "'title' field must be of type String"});
+        return;
+      }
+      // store 'title' in case all above validation checks are passed
+      newMovieInfo.title = req.body.title;
     }
+    // ensure 'title' is present
+    else{
+      res.status(400).json({"code": 400, "msg": "'title' field must be present"});
+      return;
+    }
+
+    // validation when 'releaseYear' is present
+    if(req.body.releaseYear){
+      // ensure 'releaseYear' is of type String
+      if(typeof(req.body.releaseYear) !== 'string'){
+        res.status(400).json({"code": 400, "msg": "'releaseYear' field must be of type String"});
+        return;
+      }
+      // ensure 'releaseYear' is convertible to Date 
+      //   ensure by converting string representation of date and checking if it is invalid
+      else if((new Date(req.body.releaseYear)).toString() === 'Invalid Date'){
+        res.status(400).json({"code": 400, "msg": "'releaseYear' field must be convertible to date"});
+        return;
+      }
+      // store 'releaseYear' in case all above validation checks are passed
+      // month by default is stored as 1
+      newMovieInfo.releaseYear = new Date(req.body.releaseYear, 1);
+    }
+
+    // validation when 'rating' is present
+    if(req.body.rating){
+      // ensure 'rating' is an Integer
+      if(!Number.isInteger(req.body.rating)){
+        res.status(400).json({"code": 400, "msg": "'rating' field must be an Integer"});
+        return;
+      }
+      // ensure 1 <= 'rating' <= 10 
+      else if(req.body.rating < 1 || req.body.rating > 10){
+        res.status(400).json({"code": 400, "msg": "'rating' field must lie in [1, 10]"});
+        return;
+      }
+      // store 'releaseYear' in case all above validation checks are passed
+      newMovieInfo.rating = req.body.rating;
+    }
+
+    // Process saving
+    // var movieInfo = {
+    //   title: req.body.title, 
+    //   releaseYear: req.body.releaseYear, 
+    //   rating: req.body.rating
+    // }
+
+    var movie = new Movie(newMovieInfo);
+    movie.save(function(err, doc){
+      (DEBUG) ? console.log('err on save: ', err) : "";
+      (DEBUG) ? console.log('movie on save: ', doc) : "";
+      if(!err && doc){
+        res.status(200).json({
+          "code": 200, 
+          "msg": "movie saved",
+          "savedMovie": newMovieInfo
+        });
+      }
+      else{
+        res.status(400).json({
+          "code": 400, 
+          "msg": "unable to save movie",
+          "errorMovie": req.body,
+          "recognisedMovie": newMovieInfo
+        });
+      }
+    });
   }
 
   api.removeMovie = function(req, res) {
@@ -94,8 +125,11 @@ module.exports = function(app, DEBUG, Movie){
           res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " does not exist in DB"});
         }
         else{
-          res.status(400).json({"code": 400, "msg": "movie unable to be removed according to  " 
-            + JSON.stringify(req.body)});
+          res.status(400).json({
+            "code": 400, 
+            "msg": "movie unable to be removed",
+            "errIdObject": req.body
+          });
         }
       })
     }
@@ -110,12 +144,13 @@ module.exports = function(app, DEBUG, Movie){
     //   stored as an object in MongoDB
     // 'rating' is a number that spans from 1 to 10 and must be an integer
 
-    // Use 'movieUpdateInfo' to store all update info
+    // Use 'movieUpdateInfo' to store all valid update info
     var movieUpdateInfo = {};
 
     // request
     (DEBUG) ? console.log('request: ', req.body) : "";
 
+    // validation when 'id' is present
     if(req.body.id){
       // ensure that 'id' is of type String
       if(typeof(req.body.id) !== 'string'){
@@ -161,7 +196,8 @@ module.exports = function(app, DEBUG, Movie){
         return;
       }
       // store 'releaseYear' in case all above validation checks are passed
-      movieUpdateInfo.releaseYear = req.body.releaseYear;
+      // month by default is stored as 1
+      movieUpdateInfo.releaseYear = new Date(req.body.releaseYear, 1);;
     }
 
     // validation when 'rating' is present
@@ -183,15 +219,26 @@ module.exports = function(app, DEBUG, Movie){
     // Process saving if all validation checks passed
     (DEBUG) ? console.log('movieUpdateInfo: ', movieUpdateInfo) : "";
 
+    // 'doc' is the non-updated movie object found 
     Movie.findByIdAndUpdate(req.body.id, movieUpdateInfo, function(err, doc){
       (DEBUG) ? console.log('err on update: ', err) : "";
       (DEBUG) ? console.log('movie returned on update: ', doc) : "";
 
       if(!err && doc){
-        res.status(200).json({"code": 200, "msg": "movie updated according to " + JSON.stringify(movieUpdateInfo)});
+        Movie.findById(req.body.id, function(err, docUpdated){
+          res.status(200).json({
+            "code": 200, 
+            "msg": "movie updated", 
+            "updatedMovie": docUpdated
+          });
+        });
       }
       else{
-        res.status(400).json({"code": 400, "msg": "movie unable to be edited according to " +  JSON.stringify(movieUpdateInfo)});
+        res.status(400).json({
+          "code": 400,
+          "msg": "movie unable to be updated",
+          "errorMovieUpdate": req.body
+        });
       }
     });
   }
