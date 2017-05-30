@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Movies</title>
+<script src="angular/angular.min.js"></script>
+<script src="angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="app.config.js"></script>
+ <style>.active { color: red; font-weight: bold; }</style>
+</head>
+<body ng-app="app">
+  <ul>
+    <li><a ui-sref="addMovie">Add Movie</a></li>
+    <li><a ui-sref="viewMovies">View Movies</a></li>
+  </ul>
+
+<h1>Movie list</h1>
+
+<ui-view></ui-view>
+
+</body>
+</html>
