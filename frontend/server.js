@@ -11,6 +11,8 @@ app.use('/', express.static(path.join(__dirname, 'bower_components')));
 app.use('/', express.static(path.join(__dirname, 'public')));
 // Stores the angular and HTML component of frontend 
 app.use('/', express.static(path.join(__dirname, 'views')));
+// Stores NPM packages used in frontend
+app.use('/', express.static(path.join(__dirname, 'node_modules')));
 
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'views', 'index.html'));

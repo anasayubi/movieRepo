@@ -1,0 +1,12 @@
+<div ng-controller="viewMoviesCtrl as ctrl">
+  <table ng-table="ctrl.tableParams" class="table" show-filter="true">
+      <tr ng-repeat="movie in $data">
+          <td title="'title'" filter="{ title: 'text'}" sortable="'title'">
+              {{movie.title}}</td>
+          <td title="'Release Year'" filter="{ releaseYear: 'text'}" sortable="'releaseYear'">
+              {{movie.releaseYear}}</td>
+          <td title="'Rating'" filter="{ rating: 'number'}" sortable="'rating'">
+              {{movie.rating}}</td>
+      </tr>
+  </table>
+</div>

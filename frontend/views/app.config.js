@@ -1,8 +1,13 @@
-angular.module('app', ['ui.router'])
-.config(['$stateProvider', '$provide', '$httpProvider', function($stateProvider, $provide, $httpProvider){
+angular.module('app', ['ui.router', 'ngTable'])
+.config(['$stateProvider', '$provide', '$httpProvider', '$urlRouterProvider',
+function($stateProvider, $provide, $httpProvider, $urlRouterProvider){
   // init cross origin support if needed
   // $httpProvider.defaults.useXDomain = true;
   // delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+  $provide.constant('BACKEND_SERVER_DOMAIN', 'localhost');
+  $provide.constant('BACKEND_SERVER_PORT', '9000');
+  $provide.constant('BACKEND_SERVER_PROTOCOL', 'http');
 
   var addMovieState = {
     name: 'addMovie',
@@ -11,16 +16,12 @@ angular.module('app', ['ui.router'])
     controller: 'addMovieCtrl'
   }
 
-  $provide.constant('BACKEND_SERVER_DOMAIN', 'localhost');
-  $provide.constant('BACKEND_SERVER_PORT', '9000');
-  $provide.constant('BACKEND_SERVER_PROTOCOL', 'http');
-
-  // var viewMoviesState = {
-  //   name: 'viewMovies',
-  //   url: '/viewMovies',
-  //   templateUrl: 'viewMovies.template.html',
-  //   controller: 'viewMoviesCtrl'
-  // }
+  var viewMoviesState = {
+    name: 'viewMovies',
+    url: '/viewMovies',
+    templateUrl: 'viewMovies/viewMovies.html',
+    controller: 'viewMoviesCtrl'
+  }
 
   // var editMovieState = {
   //   name: 'editMovie',
@@ -30,6 +31,9 @@ angular.module('app', ['ui.router'])
   // }
 
   $stateProvider.state(addMovieState);
-  // $stateProvider.state(viewMoviesState);
+  $stateProvider.state(viewMoviesState);
   // $stateProvider.state(editMovieState);
+
+  // Default path and path when any other invalid path is given  
+  $urlRouterProvider.otherwise('/viewMovies');
 }]);

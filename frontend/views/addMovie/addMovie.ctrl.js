@@ -140,21 +140,16 @@ function($scope, $http, BSD, BSPORT, BSPROT){
       };
 
       $http.post(requestURL, data).then(function success(resp){
-        console.log('resp: ', resp);
+        // console.log('resp: ', resp);
         // show success message
         self.success = true;
+        self.title = '';
+        self.releaseYear = '';
+        self.rating = '';
       }, function err(resp){
-        console.log('err: ', resp);
+        // console.log('err: ', resp);
         self.serverError = true;
       })
     }
   }
 }])
-
-// .controller('viewMoviesCtrl', [function(){
-//   console.log('');
-// }])
-
-// .controller('editMovieCtrl', [function(){
-//   console.log('');
-// })
