@@ -297,5 +297,22 @@ module.exports = function(app, DEBUG, Movie){
     }
   }
 
+  api.getAllMovies = function(req, res){
+    // returns all the movies within current db as a list of objects in JSON or a status message
+    Movie.find((err, docs) => {
+      console.log('err: ', err);
+      console.log('docs: ', docs);
+      if(docs){
+        res.status(200).json(docs);
+      }
+      else{
+        res.status(200).json({
+          'status': 200,
+          'msg': 'interal server error occured'
+        });
+      }
+    })
+  }
+
   return api;
 } 

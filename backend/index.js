@@ -53,6 +53,8 @@ app.post('/api/editMovie', api.editMovie);
 // if 'pageNo' field integer exceeds greatest value of possible page number then default to the greatest value
 // returns 5 movies of a page
 app.post('/api/showMovies', api.showMovies);
+// returns all the movies within current db as a list of objects in JSON
+app.get('/api/allMovies', api.getAllMovies);
 
 app.listen(9000, function(){
   console.log('Initialising backend server started at http://localhost:9000');
