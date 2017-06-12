@@ -1,0 +1,22 @@
+<div ng-controller="addMovieCtrl as ctrl">
+  <h3>(*) Required fields</h3>
+  <form method="post" name="addMovieForm">
+    Title *: <br>
+    <input type="text" name="title" ng-model="ctrl.title" ng-required><br>
+    Release Year: <br>
+    <input type="number" name="releaseYear" ng-model="ctrl.releaseYear" 
+    ng-min="1500" ng-max="2100" ng-step="1"><br>
+    Rating: <br>
+    <input type="number" name="rating" ng-model="ctrl.rating" 
+    ng-min="1" ng-max="10" ng-step="1">
+    <br>
+    <input type="submit" value="submit" ng-click="ctrl.submit()">
+    <p ng-show="ctrl.submitted && addMovieForm.title.$valid">Title must be filled out</p>
+    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.min">Release year must be above 1500</p>
+    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.max">Release year must be below 2100</p>
+    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.step">Release year must be a integer</p>
+    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.number">Release year must be a number</p>
+    {{addMovieForm.releaseYear.$error}}
+  </form>
+  
+</div>

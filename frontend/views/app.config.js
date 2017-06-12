@@ -1,13 +1,13 @@
 angular.module('app', ['ui.router'])
 .config(['$stateProvider', '$provide', '$httpProvider', function($stateProvider, $provide, $httpProvider){
-  // init cross origin support
-  $httpProvider.defaults.useXDomain = true;
-  delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  // init cross origin support if needed
+  // $httpProvider.defaults.useXDomain = true;
+  // delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
   var addMovieState = {
     name: 'addMovie',
     url: '/addMovie',
-    templateUrl: 'addMovie.template.html',
+    templateUrl: 'addMovie/addMovie.html',
     controller: 'addMovieCtrl'
   }
 
