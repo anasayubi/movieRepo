@@ -2,11 +2,14 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var colours = require('colors');
+var cors = require('cors');
 
 // Initialise App
 var app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json({limit : '80mb'}));
+// allow cross origin requests
+app.use(cors());
 // app.use(bodyParser.urlencoded({extended: true}))
 // set terminal colour themes
 colours.setTheme({
