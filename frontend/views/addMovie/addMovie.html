@@ -1,22 +1,28 @@
 <div ng-controller="addMovieCtrl as ctrl">
   <h3>(*) Required fields</h3>
-  <form method="post" name="addMovieForm">
+  <form method="post" name="ctrl.addMovieForm">
+    <p ng-show="ctrl.titleRequiredError && ctrl.submitted">Title must be filled out</p>
     Title *: <br>
-    <input type="text" name="title" ng-model="ctrl.title" ng-required><br>
+    <input type="text" name="title" ng-model="ctrl.title" ng-change="ctrl.checkTitle()" 
+    ng-class="{'has-error': ctrl.titleRequiredError === true}" required ><br>
+    <p ng-show="ctrl.releaseYearMinError && ctrl.submitted">Release year must be above 1500</p>
+    <p ng-show="ctrl.releaseYearMaxError && ctrl.submitted">Release year must be below 2100</p>
+    <p ng-show="ctrl.releaseYearStepError && ctrl.submitted">Release year must be a integer</p>
+    <p ng-show="ctrl.releaseYearNumberError && ctrl.submitted">Release year must be a number</p>
     Release Year: <br>
-    <input type="number" name="releaseYear" ng-model="ctrl.releaseYear" 
-    ng-min="1500" ng-max="2100" ng-step="1"><br>
+    <input type="number" name="releaseYear" ng-model="ctrl.releaseYear" ng-change="ctrl.checkReleaseYear()"
+    ng-class="{'has-error': ctrl.releaseYearError === true}" ng-min="1500" ng-max="2100" ng-step="1"><br>
+    <p ng-show="ctrl.ratingMinError && ctrl.submitted">Rating must be above 1</p>
+    <p ng-show="ctrl.ratingMaxError && ctrl.submitted">Rating must be below 10</p>
+    <p ng-show="ctrl.ratingStepError && ctrl.submitted">Rating must be a integer</p>
+    <p ng-show="ctrl.ratingNumberError && ctrl.submitted">Rating must be a number</p>
     Rating: <br>
-    <input type="number" name="rating" ng-model="ctrl.rating" 
-    ng-min="1" ng-max="10" ng-step="1">
+    <input type="number" name="rating" ng-model="ctrl.rating" ng-change="ctrl.checkRating()"
+    ng-class="{'has-error': ctrl.ratingError === true}" ng-min="1" ng-max="10" ng-step="1">
     <br>
     <input type="submit" value="submit" ng-click="ctrl.submit()">
-    <p ng-show="ctrl.submitted && addMovieForm.title.$valid">Title must be filled out</p>
-    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.min">Release year must be above 1500</p>
-    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.max">Release year must be below 2100</p>
-    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.step">Release year must be a integer</p>
-    <p ng-show="ctrl.submitted && addMovieForm.releaseYear.$error.number">Release year must be a number</p>
-    {{addMovieForm.releaseYear.$error}}
+    <p ng-show="ctrl.success && ctrl.submitted">Success!</p>
+    <p ng-show="ctrl.serverError && ctrl.submitted">Internal server error occured</p>
   </form>
   
 </div>

@@ -1,0 +1,5 @@
+.has-error { 
+    outline: none;
+    border-color: red;
+    border: 2px solid red;
+}
