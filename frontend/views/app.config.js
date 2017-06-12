@@ -13,14 +13,14 @@ function($stateProvider, $provide, $httpProvider, $urlRouterProvider){
     name: 'addMovie',
     url: '/addMovie',
     templateUrl: 'addMovie/addMovie.html',
-    controller: 'addMovieCtrl'
+    controller: 'addMovieCtrl as ctrl'
   }
 
   var viewMoviesState = {
     name: 'viewMovies',
     url: '/viewMovies',
     templateUrl: 'viewMovies/viewMovies.html',
-    controller: 'viewMoviesCtrl'
+    controller: 'viewMoviesCtrl as ctrl'
   }
 
   // var editMovieState = {
