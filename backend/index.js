@@ -23,9 +23,35 @@ var DEBUG = true;
 
 var api = require('./api')(app, DEBUG, Movie);
 
-app.post('/api/addMovie', api.addMovie);
+// Accepts JSON input as such:
+//   {title: [String], releaseYear: [String], rating: [Number]}
+// 'title' is required
+// both 'releaseYear' & 'rating' are not required
+// 'releaseYear' is a string that must be converted to date
+//   stored as an object in MongoDB
+// 'rating' is a number that spans from 1 to 10 and must be an integer
+// app.post('/api/addMovie', api.addMovie);
+app.post('/api/movie', api.addMovie);
+// Accepts JSON input as such:
+//   {id: [ObjectID]}
+// 'id' field must be a valid ID in the MongoDB
 app.delete('/api/movie', api.removeMovie);
+// Accepts JSON input as such:
+//   {id: [ObjectID], title: [String], releaseYear: [String], rating: [Number]}
+// 'id' is required as it identifies which movie must be edited
+// both 'releaseYear' & 'rating' are not required
+// 'releaseYear' is a string that must be converted to date
+//   stored as an object in MongoDB
+// 'rating' is a number that spans from 1 to 10 and must be an integer
 app.post('/api/editMovie', api.editMovie);
+// Accepts JSON input as such:
+//   {pageNo: [Integer]}
+// 'pageNo' field must be an integer and must be within the number of page numbers available
+// the page numbers available depend on the number of movies within the DB & are calculated according to this formula:
+//   (no. of movies) / 5
+// 'pageNo' field must be > 0
+// if 'pageNo' field integer exceeds greatest value of possible page number then default to the greatest value
+// returns 5 movies of a page
 app.post('/api/showMovies', api.showMovies);
 
 app.listen(9000, function(){
