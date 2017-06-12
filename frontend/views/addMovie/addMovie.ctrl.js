@@ -68,6 +68,10 @@ function($scope, $http, BSD, BSPORT, BSPROT){
   self.submit = function(){
     // form has been submitted hence true 
     self.submitted = true;
+    // remove success message
+    self.success = false;
+    // remove server error message
+    self.serverError = false;
 
     // refresh all errors before setting them
     self.titleRequiredError = false;
@@ -135,7 +139,9 @@ function($scope, $http, BSD, BSPORT, BSPROT){
 
       var data = {
         title: self.title,
-        releaseYear: String(self.releaseYear),
+        // if 'self.releaseYear' is a valid number then convert number to string
+        //  otherwise insert an empty string
+        releaseYear: (self.releaseYear) ? String(self.releaseYear) : '',
         rating: self.rating 
       };
 
