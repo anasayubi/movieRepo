@@ -22,6 +22,7 @@
   <br>
   <input type="submit" value="submit" ng-click="ctrl.submit()">
   <p ng-show="ctrl.success && ctrl.submitted">Success!</p>
-  <p ng-show="ctrl.serverError && ctrl.submitted">Internal server error occured</p>
+  <p ng-show="ctrl.saveServerError && ctrl.submitted">Internal server error occured on save</p>
+  <p ng-show="ctrl.retrieveServerError">Internal server error occured on save on retrieval</p>
 </form>
   

@@ -5,6 +5,7 @@ function($scope, $http, $state, $timeout, storeService, urlService){
   // true if 'getEditId' returns empty string (no edit ID set)
   if(!storeService.getEditId()){
     $state.go('viewMovies');
+    return;
   }
 
   var self = this;
@@ -12,8 +13,28 @@ function($scope, $http, $state, $timeout, storeService, urlService){
   self.submitted = false;
   // reveals success message
   self.success = false;
-  // reveals server error
-  self.serverError = false;
+  // reveals save server error
+  self.saveServerError = false;
+  // reveals retrieve server error
+  self.retrieveServerError = false;
+  
+  // retrieve all fields to be edited:
+  // compose URL 
+  var requestURL = urlService.backendUrl('/api/movie/' + storeService.getEditId()); 
+  $http.get(requestURL).then(
+    function success(resp){
+      self.title = resp.data.title,
+      // convert date representation to year
+      self.releaseYear = (new Date(resp.data.releaseYear)).getFullYear(),
+      self.rating = resp.data.rating
+    }, 
+    function err(resp){
+      self.retrieveServerError = true;
+      // remove server error message after 3s
+      $timeout(function(){
+        self.saveServerErroror = false;
+      }, 3000);
+    });
 
   // Checkers:
   //   Remove validation messages
@@ -76,7 +97,7 @@ function($scope, $http, $state, $timeout, storeService, urlService){
     // remove success message
     self.success = false;
     // remove server error message
-    self.serverError = false;
+    self.saveServerError = false;
 
     // refresh all errors before setting them
     self.titleRequiredError = false;
@@ -132,9 +153,10 @@ function($scope, $http, $state, $timeout, storeService, urlService){
     // If no errors are present
     if(!self.ratingError && !self.releaseYearError && !self.titleRequiredError){
       // create backend URL with path
-      var requestURL = urlService.backendUrl('/api/movie');
+      var requestURL = urlService.backendUrl('/api/editMovie');
 
       var data = {
+        id: storeService.getEditId(),
         title: self.title,
         // if 'self.releaseYear' is a valid number then convert number to string
         //  otherwise insert an empty string
@@ -153,12 +175,13 @@ function($scope, $http, $state, $timeout, storeService, urlService){
         self.title = '';
         self.releaseYear = '';
         self.rating = '';
+        $state.go('viewMovies');
       }, function err(resp){
         // console.log('err: ', resp);
-        self.serverError = true;
+        self.saveServerError = true;
         // remove server error message after 3s
         $timeout(function(){
-          self.serverError = false;
+          self.saveServerErroror = false;
         }, 3000);
       })
     }
