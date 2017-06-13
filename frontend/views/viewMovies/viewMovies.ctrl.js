@@ -1,7 +1,7 @@
 angular.module('app')
-.controller('viewMoviesCtrl', ['$scope', '$http', '$state', '$timeout', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
+.controller('viewMoviesCtrl', ['$scope', '$http', '$state', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
 'BACKEND_SERVER_PROTOCOL', 'NgTableParams',
-function($scope, $http, $state, $timeout, BSD, BSPORT, BSPROT, NgTableParams){
+function($scope, $http, $state, BSD, BSPORT, BSPROT, NgTableParams){
   var self = this;
   // no server error on init
   self.serverError = false;

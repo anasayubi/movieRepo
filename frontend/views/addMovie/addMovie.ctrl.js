@@ -1,7 +1,7 @@
 angular.module('app')
-.controller('addMovieCtrl', ['$scope', '$http', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
+.controller('addMovieCtrl', ['$scope', '$http', '$timeout', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
 'BACKEND_SERVER_PROTOCOL',
-function($scope, $http, BSD, BSPORT, BSPROT){
+function($scope, $http, $timeout, BSD, BSPORT, BSPROT){
   var self = this;
   // indicates whether the form has been submitted or not
   self.submitted = false;
@@ -149,12 +149,20 @@ function($scope, $http, BSD, BSPORT, BSPROT){
         // console.log('resp: ', resp);
         // show success message
         self.success = true;
+        // remove success message after 3s
+        $timeout(function(){
+          self.success = false;
+        }, 3000);
         self.title = '';
         self.releaseYear = '';
         self.rating = '';
       }, function err(resp){
         // console.log('err: ', resp);
         self.serverError = true;
+        // remove server error message after 3s
+        $timeout(function(){
+          self.serverError = false;
+        }, 3000);
       })
     }
   }
