@@ -1,3 +1,4 @@
+<h1>View Movies</h1>
 <table ng-table="ctrl.tableParams" class="table" show-filter="true" onload="ctrl.loadView()" 
   ng-hide="ctrl.noRecords">
     <tr ng-repeat="movie in $data">
@@ -8,6 +9,7 @@
         <td title="'Rating'" filter="{ rating: 'number'}" sortable="'rating'">
             {{movie.rating}}</td>
         <td><button ng-click="ctrl.deleteMovie(movie._id)">Delete</button></td>
+        <td><button ng-click="ctrl.editMovie(movie._id)">Edit</button></td>
     </tr>
 </table>
 <p ng-show="ctrl.noRecords">No records exist</p>

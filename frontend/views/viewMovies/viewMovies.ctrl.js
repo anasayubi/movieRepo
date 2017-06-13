@@ -52,8 +52,8 @@ function($scope, $http, $state, $timeout, BSD, BSPORT, BSPROT, NgTableParams){
     else{
       var requestURL = BSPROT + '://' + BSD + '/api/movie/' + movieId;
     }
-    console.log(movieId)
-    console.log(requestURL)
+    // console.log(movieId)
+    // console.log(requestURL)
     $http.delete(requestURL).then(function success(resp){
       $state.reload();
     }, function err(resp){
@@ -61,6 +61,10 @@ function($scope, $http, $state, $timeout, BSD, BSPORT, BSPROT, NgTableParams){
       self.deleteServerError = true; 
       console.log('err: ', resp);
     })
+  }
+
+  self.editMovie = function(movieId){
+    $state.go('editMovie');
   }
 
   self.loadView();

@@ -23,16 +23,16 @@ function($stateProvider, $provide, $httpProvider, $urlRouterProvider){
     controller: 'viewMoviesCtrl as ctrl'
   }
 
-  // var editMovieState = {
-  //   name: 'editMovie',
-  //   url: '/editMovie',
-  //   templateUrl: 'editMovie.template.html',
-  //   controller: 'editMovieCtrl'
-  // }
+  var editMovieState = {
+    name: 'editMovie',
+    url: '/editMovie',
+    templateUrl: 'editMovie/editMovie.html',
+    controller: 'editMovieCtrl as ctrl'
+  }
 
   $stateProvider.state(addMovieState);
   $stateProvider.state(viewMoviesState);
-  // $stateProvider.state(editMovieState);
+  $stateProvider.state(editMovieState);
 
   // Default path and path when any other invalid path is given  
   $urlRouterProvider.otherwise('/viewMovies');
