@@ -1,7 +1,6 @@
 angular.module('app')
-.controller('viewMoviesCtrl', ['$scope', '$http', '$state', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
-'BACKEND_SERVER_PROTOCOL', 'NgTableParams',
-function($scope, $http, $state, BSD, BSPORT, BSPROT, NgTableParams){
+.controller('viewMoviesCtrl', ['$scope', '$http', '$state', 'urlService', 'NgTableParams',
+function($scope, $http, $state, urlService, NgTableParams){
   var self = this;
   // no server error on init
   self.serverError = false;
@@ -9,16 +8,8 @@ function($scope, $http, $state, BSD, BSPORT, BSPROT, NgTableParams){
   self.noRecords = false;
 
   self.loadView = function(){
-    // if port is a non-empty string then set requestURL as such
-    if(BSPORT){
-      var requestURL = BSPROT + '://' + BSD + ':' + BSPORT + '/api/allMovies';
-      // console.log(requestURL)
-    }
-    // if port is an empty string then set requestURL as such
-    else{
-      var requestURL = BSPROT + '://' + BSD + '/api/allMovies';
-      // console.log(requestURL)
-    }
+    // create backend URL with path
+    var requestURL = urlService.backendUrl('/api/allMovies');
   
     $http.get(requestURL).then(function success(resp){
       // if no records are returned then show error message
@@ -44,14 +35,8 @@ function($scope, $http, $state, BSD, BSPORT, BSPROT, NgTableParams){
   }
 
   self.deleteMovie = function(movieId){
-    // if port is a non-empty string then set requestURL as such
-    if(BSPORT){
-      var requestURL = BSPROT + '://' + BSD + ':' + BSPORT + '/api/movie/' + movieId;
-    }
-    // if port is an empty string then set requestURL as such
-    else{
-      var requestURL = BSPROT + '://' + BSD + '/api/movie/' + movieId;
-    }
+    var requestURL = urlService.backendUrl('/api/movie/' + movieId);
+
     // console.log(movieId)
     // console.log(requestURL)
     $http.delete(requestURL).then(function success(resp){

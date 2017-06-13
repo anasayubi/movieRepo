@@ -1,7 +1,6 @@
 angular.module('app')
-.controller('addMovieCtrl', ['$scope', '$http', '$timeout', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
-'BACKEND_SERVER_PROTOCOL',
-function($scope, $http, $timeout, BSD, BSPORT, BSPROT){
+.controller('addMovieCtrl', ['$scope', '$http', '$timeout', 'urlService',
+function($scope, $http, $timeout, urlService){
   var self = this;
   // indicates whether the form has been submitted or not
   self.submitted = false;
@@ -126,16 +125,8 @@ function($scope, $http, $timeout, BSD, BSPORT, BSPROT){
 
     // If no errors are present
     if(!self.ratingError && !self.releaseYearError && !self.titleRequiredError){
-      // if port is a non-empty string then set requestURL as such
-      if(BSPORT){
-        var requestURL = BSPROT + '://' + BSD + ':' + BSPORT + '/api/movie';
-        // console.log(requestURL)
-      }
-      // if port is an empty string then set requestURL as such
-      else{
-        var requestURL = BSPROT + '://' + BSD + '/api/movie';
-        // console.log(requestURL)
-      }
+      // create backend URL with path
+      var requestURL = urlService.backendUrl('/api/movie');
 
       var data = {
         title: self.title,
