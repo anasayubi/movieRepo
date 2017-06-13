@@ -32,10 +32,10 @@ var api = require('./api')(app, DEBUG, Movie);
 // 'rating' is a number that spans from 1 to 10 and must be an integer
 // app.post('/api/addMovie', api.addMovie);
 app.post('/api/movie', api.addMovie);
-// Accepts JSON input as such:
-//   {id: [ObjectID]}
-// 'id' field must be a valid ID in the MongoDB
-app.delete('/api/movie', api.removeMovie);
+// Accepts requests as such:
+//   /api/movie/27183bd7271
+// ':id' must be a valid 'id' in the db
+app.delete('/api/movie/:id', api.removeMovie);
 // Accepts JSON input as such:
 //   {id: [ObjectID], title: [String], releaseYear: [String], rating: [Number]}
 // 'id' is required as it identifies which movie must be edited

@@ -90,42 +90,40 @@ module.exports = function(app, DEBUG, Movie){
   }
 
   api.removeMovie = function(req, res) {
-    // Accepts JSON input as such:
-    //   {id: [ObjectID]}
-    // 'id' field must be a valid ID in the MongoDB
-
+    // Accepts requests as such:
+    //   /api/movie/27183bd7271
+    // ':id' must be a valid 'id' in the db 
+    console.log('req.params: ', req.params);
     // request
-    (DEBUG) ? console.log('request: ', req.body) : "";
+    (DEBUG) ? console.log('request: ', req.params.id) : "";
 
-    // Validation
-    // ensure 'id' is present
-    if(!req.body.id){
-      res.status(400).json({"code": 400, "msg": "'id' field must be present"});
-    }
-    // ensure that 'id' is of type String
-    else if(typeof(req.body.id) !== 'string'){
-      res.status(400).json({"code": 400, "msg": "'id' field must be of type String"});
-    }
-    else{
-      Movie.findByIdAndRemove(req.body.id, function(err, writeResult){
-        (DEBUG) ? console.log('err on remove: ', err) : "";
-        (DEBUG) ? console.log('writeResult on remove: ', writeResult) : "";
-
-        if(!err && writeResult){
-          res.status(200).json({"code": 200, "msg": "movie with id " + req.body.id + " has been removed"});
-        }
-        else if(!err && !writeResult){
-          res.status(400).json({"code": 400, "msg": "movie with id " + req.body.id + " does not exist in DB"});
-        }
-        else{
-          res.status(400).json({
-            "code": 400, 
-            "msg": "movie unable to be removed",
-            "errIdObject": req.body
-          });
-        }
-      })
-    }
+    Movie.findByIdAndRemove(req.params.id, function(err, writeResult){
+      (DEBUG) ? console.log('err on remove: ', err) : "";
+      (DEBUG) ? console.log('writeResult on remove: ', writeResult) : "";
+      // On casterror or when no write result occurs and no error is given
+      if((err && err.name === 'CastError' && err.kind === 'ObjectId') || 
+      !err && !writeResult){
+        res.status(400).json({
+          "code": 400, 
+          "msg": "movie with id " + req.params.id + " does not exist in DB"
+        });
+      }
+      // on successful removal
+      else if(writeResult){
+        res.status(200).json({
+          "code": 200,
+          "msg": "movie with id " + req.params.id + " has been removed"
+        });
+      }
+      // on any other possible scenario
+      else{
+        res.status(400).json({
+          "code": 400, 
+          "msg": "movie unable to be removed",
+          "errIdObject": req.params
+        });
+      }
+    });
   }
 
   api.editMovie = function(req, res){
