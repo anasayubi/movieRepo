@@ -1,7 +1,11 @@
 angular.module('app')
-.controller('addMovieCtrl', ['$scope', '$http', '$timeout', 'urlService',
-function($scope, $http, $timeout, urlService){
+.controller('addMovieCtrl', ['$scope', '$http', '$timeout', 'urlService', 'storeService',
+function($scope, $http, $timeout, urlService, storeService){
   var self = this;
+
+  // remove edit Id as addMovie has nothing to do with editing
+  storeService.clearEditId();
+
   // indicates whether the form has been submitted or not
   self.submitted = false;
   // reveals success message

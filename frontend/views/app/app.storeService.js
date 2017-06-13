@@ -5,6 +5,7 @@ function storeService(){
   var editId = ''; 
   return {
     getEditId: function() { return editId; },
-    setEditId: function(id) { editId = id; }
+    setEditId: function(id) { editId = id; },
+    clearEditId: function() { editId = ''; }
   }
 }

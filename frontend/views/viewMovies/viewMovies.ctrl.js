@@ -1,7 +1,11 @@
 angular.module('app')
-.controller('viewMoviesCtrl', ['$scope', '$http', '$state', 'urlService', 'NgTableParams',
-function($scope, $http, $state, urlService, NgTableParams){
+.controller('viewMoviesCtrl', ['$scope', '$http', '$state', 'urlService', 'storeService', 'NgTableParams',
+function($scope, $http, $state, urlService, storeService, NgTableParams){
   var self = this;
+
+  // remove edit Id as viewMovies has nothing to do with editing
+  storeService.clearEditId();
+
   // no server error on init
   self.serverError = false;
   // no empty records on init
@@ -49,6 +53,7 @@ function($scope, $http, $state, urlService, NgTableParams){
   }
 
   self.editMovie = function(movieId){
+    storeService.setEditId(movieId);
     $state.go('editMovie');
   }
 
