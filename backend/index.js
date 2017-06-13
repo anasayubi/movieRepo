@@ -55,6 +55,10 @@ app.post('/api/editMovie', api.editMovie);
 app.post('/api/showMovies', api.showMovies);
 // returns all the movies within current db as a list of objects in JSON
 app.get('/api/allMovies', api.getAllMovies);
+// Accepts requests as such:
+//   /api/movie/27183bd7271
+// ':id' must be a valid 'id' in the db
+app.get('/api/movie/:id', api.getMovie);
 
 app.listen(9000, function(){
   console.log('Initialising backend server started at http://localhost:9000');
