@@ -19,7 +19,7 @@ colours.setTheme({
 // returns Movie model
 var Movie = require('./db')(colours);
 // set debugging variable
-var DEBUG = true;
+var DEBUG = false;
 
 var api = require('./api')(app, DEBUG, Movie);
 

@@ -93,9 +93,9 @@ module.exports = function(app, DEBUG, Movie){
     // Accepts requests as such:
     //   /api/movie/27183bd7271
     // ':id' must be a valid 'id' in the db 
-    console.log('req.params: ', req.params);
+    
     // request
-    (DEBUG) ? console.log('request: ', req.params.id) : "";
+    (DEBUG) ? console.log('request: ', req.params) : "";
 
     Movie.findByIdAndRemove(req.params.id, function(err, writeResult){
       (DEBUG) ? console.log('err on remove: ', err) : "";
