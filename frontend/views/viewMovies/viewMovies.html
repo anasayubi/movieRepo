@@ -7,7 +7,9 @@
             {{movie.releaseYear}}</td>
         <td title="'Rating'" filter="{ rating: 'number'}" sortable="'rating'">
             {{movie.rating}}</td>
+        <td><button ng-click="ctrl.deleteMovie(movie._id)">Delete</button></td>
     </tr>
 </table>
 <p ng-show="ctrl.noRecords">No records exist</p>
-<p ng-show="ctrl.serverError">Internal server error occurred</p>
+<p ng-show="ctrl.retrieveServerError">Internal server error occurred on retrieving movies</p>
+<p ng-show="ctrl.deleteServerError">Internal server error occurred on deleting movie</p>

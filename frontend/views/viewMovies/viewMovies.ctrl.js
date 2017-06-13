@@ -1,7 +1,7 @@
 angular.module('app')
-.controller('viewMoviesCtrl', ['$scope', '$http', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
+.controller('viewMoviesCtrl', ['$scope', '$http', '$state', '$timeout', 'BACKEND_SERVER_DOMAIN', 'BACKEND_SERVER_PORT', 
 'BACKEND_SERVER_PROTOCOL', 'NgTableParams',
-function($scope, $http, BSD, BSPORT, BSPROT, NgTableParams){
+function($scope, $http, $state, $timeout, BSD, BSPORT, BSPROT, NgTableParams){
   var self = this;
   // no server error on init
   self.serverError = false;
@@ -35,10 +35,30 @@ function($scope, $http, BSD, BSPORT, BSPROT, NgTableParams){
           }
         })
         // var data = resp.data;
-        self.tableParams = new NgTableParams({}, { dataset: resp.data});
+        self.tableParams = new NgTableParams({}, { dataset: resp.data });
       }
     }, function err(resp){
-      self.serverError = true; 
+      self.retrieveServerError = true; 
+      console.log('err: ', resp);
+    })
+  }
+
+  self.deleteMovie = function(movieId){
+    // if port is a non-empty string then set requestURL as such
+    if(BSPORT){
+      var requestURL = BSPROT + '://' + BSD + ':' + BSPORT + '/api/movie/' + movieId;
+    }
+    // if port is an empty string then set requestURL as such
+    else{
+      var requestURL = BSPROT + '://' + BSD + '/api/movie/' + movieId;
+    }
+    console.log(movieId)
+    console.log(requestURL)
+    $http.delete(requestURL).then(function success(resp){
+      $state.reload();
+    }, function err(resp){
+      // err
+      self.deleteServerError = true; 
       console.log('err: ', resp);
     })
   }
