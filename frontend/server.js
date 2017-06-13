@@ -15,7 +15,7 @@ app.use('/', express.static(path.join(__dirname, 'views')));
 app.use('/', express.static(path.join(__dirname, 'node_modules')));
 
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.sendFile(path.join(__dirname, 'views', 'app/index.html'));
 })
 
 app.listen(9006, function(){

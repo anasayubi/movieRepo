@@ -2,18 +2,22 @@
 <html>
 <head>
 <title>Movies</title>
-
+<!--libs-->
 <script src="angular/angular.js"></script>
 <script src="angular-ui-router/release/angular-ui-router.min.js"></script>
-<script src="app.config.js"></script>
-<script src="app.urlService.js"></script>
+<script src="ng-table/bundles/ng-table.js"></script>
+<!--app-->
+<script src="app/app.config.js"></script>
+<script src="app/app.urlService.js"></script>
+<script src="app/app.storeService.js"></script>
+<!--app routes-->
 <script src="addMovie/addMovie.ctrl.js"></script>
 <script src="viewMovies/viewMovies.ctrl.js"></script>
 <script src="editMovie/editMovie.ctrl.js"></script>
-<script src="ng-table/bundles/ng-table.js"></script>
- <link rel="stylesheet" type="text/css" href="styles.css">
- <link rel="stylesheet" type="text/css" href="ng-table/bundles/ng-table.css">
- <style>.active { color: red; font-weight: bold; }</style>
+<!--style sheets-->
+<link rel="stylesheet" type="text/css" href="styles.css">
+<link rel="stylesheet" type="text/css" href="ng-table/bundles/ng-table.css">
+<style>.active { color: red; font-weight: bold; }</style>
 </head>
 <body ng-app="app">
   <ul>
