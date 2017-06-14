@@ -9,7 +9,7 @@ Both frontend and backend will run on their own respective server instances:
 1) Frontend will run on port 9006
 2) Backend will run on port 9000   
 
-To run the project run the following commands on your linux terminal:
+To run the project run the following commands on your linux terminal (make sure that your MongoDB is running beforehand):
 1) git clone https://github.com/anasayubi/movieRepo
 2) cd movieRepo/backend
 3) npm install
@@ -18,4 +18,5 @@ To run the project run the following commands on your linux terminal:
 Open a new linux terminal in 'movieRepo' and:  
 1) cd frontend
 2) npm install
-3) node server.js
+3) bower install
+4) node server.js
