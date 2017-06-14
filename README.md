@@ -13,8 +13,9 @@ To run the project run the following commands on your linux terminal:
 1) git clone https://github.com/anasayubi/movieRepo
 2) cd movieRepo/backend
 3) npm install
-4) node index.js
-Open a new linux terminal in 'movieRepo' and:
-5) cd frontend
-6) npm install
-7) node server.js
+4) node index.js  
+
+Open a new linux terminal in 'movieRepo' and:  
+1) cd frontend
+2) npm install
+3) node server.js
